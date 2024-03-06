@@ -39,6 +39,7 @@ int Menu();
 void Hide();
 void About();
 void Help();
+void Top();
 void initSnake(void);
 void printFood(void);
 void gotoxy(int x, int y);

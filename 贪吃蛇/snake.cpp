@@ -4,20 +4,25 @@
 
 SNAKE snake;
 FOOD food;
+unsigned int score=0;
+unsigned int max=0;
 char now_Dir = RIGHT;
 char direction = RIGHT;
 
 
+
 int Menu()
 {
-	gotoxy(43, 12);
+	gotoxy(43, 10);
 	printf("贪吃蛇小游戏");
-	gotoxy(43, 14);
+	gotoxy(43, 12);
 	printf("1. 开始游戏");
-	gotoxy(43, 16);
+	gotoxy(43, 14);
 	printf("2. 帮助");
-	gotoxy(43, 18);
+	gotoxy(43, 16);
 	printf("3. 关于");
+	gotoxy(43, 18);
+	printf("4. 最高分");
 	gotoxy(43, 20);
 	printf("按任意键退出游戏");
 	Hide();
@@ -29,6 +34,7 @@ int Menu()
 	case '1':result = 1; break;
 	case '2':result = 2; break;
 	case '3':result = 3; break;
+	case '4':result = 4; break;
 	}
 	system("cls");
 	return result;
@@ -43,7 +49,7 @@ void Hide()
 
 void About()
 {
-	gotoxy(30, 12);
+	gotoxy(43, 12);
 	printf("懂得都懂");
 	gotoxy(43, 14);
 	printf("贪吃蛇游戏");
@@ -56,7 +62,42 @@ void About()
 }
 void Help()
 {
-	//待完成
+	
+	gotoxy(40, 12);
+	printf("w 上");
+	gotoxy(40, 14);
+	printf("s 下");
+	gotoxy(40, 16);
+	printf("a 左");
+	gotoxy(40, 18);
+	printf("d 右");
+	gotoxy(40, 20);
+	printf("蛇撞到自己或者墙时结束");
+	gotoxy(45, 22);
+	printf("按任意键返回上级菜单");
+		char ch = _getch();
+	system("cls");
+
+}
+
+void Top()
+{
+	unsigned int topscore;	//从top.txt读取最高分
+
+	FILE* pt = fopen("top.txt", "r");
+
+	fscanf(pt, "%u", &topscore);
+
+	fclose(pt);
+
+	gotoxy(43, 13);
+	printf("最高分：%u", topscore);
+
+	gotoxy(43, 16);
+	printf("按任意键返回上级菜单");
+	Hide();
+	char ch = _getch();
+	system("cls");
 }
 
 void initSnake(void)	//初始化蛇，确定蛇的初始大小和位置
@@ -232,6 +273,19 @@ int MoveSnake()		//移动蛇 , 返回1继续 ，返回0结束
 		printf("按任意键返回主菜单");
 		char c = _getch();
 		system("cls");
+
+		//计算最高分
+		 int score = snake.length - 2;
+		FILE* pt = fopen("top.txt", "r");	//打开文件读取之前最高分
+		fscanf(pt, "%u", &max);
+		fclose(pt);
+
+		if (score > max)	//如果是最高分
+		{
+			pt = fopen("top.txt", "w");
+			fprintf(pt, "%u", score);		//将最高分读入top.txt
+			fclose(pt);
+		}
 		return 0;
 	}
 

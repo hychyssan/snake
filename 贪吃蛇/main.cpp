@@ -21,6 +21,9 @@ int main()
 		case 3:
 			About();
 			break;
+		case 4:
+			Top();
+			break;
 		case 0:
 			end = 0; break;
 		}
