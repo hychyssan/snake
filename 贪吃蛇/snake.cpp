@@ -128,7 +128,7 @@ void initMap()	//画出蛇,食物和墙
 
 
 	//绘制地图左右，上下边界
-	for (int i = 0; i < WIDTH; i++)
+	for (int i = 0; i < HEIGHT-1; i++)
 	{
 		gotoxy(0, i);
 		printf("|");
@@ -136,7 +136,7 @@ void initMap()	//画出蛇,食物和墙
 		printf("|");
 	}
 
-	for (int i = 0; i < HEIGHT-1; i++)	//i is i early
+	for (int i = 0; i < WIDTH; i++)	//i is i early
 	{
 		gotoxy(i, 0);
 		printf("-");
@@ -265,7 +265,11 @@ void SpeedControl()		//根据蛇长调整蛇的移动速度
 	case 6:snake.speed = 200; break;
 	case 9:snake.speed = 180; break;
 	case 12:snake.speed = 160; break;
-	case 15:snake.speed = 120; break;	//待写
+	case 15:snake.speed = 140; break;
+	case 18:snake.speed = 120; break;
+	case 21:snake.speed = 100; break;
+	case 24:snake.speed = 80; break;
+
 	default: break;
 	}
 }

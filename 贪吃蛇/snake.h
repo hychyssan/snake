@@ -6,7 +6,7 @@
 #include<time.h>
 
 
-#define WIDTH 40
+#define WIDTH 60
 #define HEIGHT 20
 #define MAX 120
 #define UP 'w'
