@@ -15,7 +15,7 @@ int main()
 			initMap();
 			while (MoveSnake());
 			break;
-		case 2: //ดýะด
+		case 2: 
 			initMap2();
 			while (MoveSnake2());
 			break;
@@ -27,6 +27,9 @@ int main()
 			break;
 		case 5:
 			Top();
+			break;
+		case 6:
+			Mode();
 			break;
 		case 0:
 			end = 0; break;

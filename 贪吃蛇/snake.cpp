@@ -5,13 +5,15 @@
 SNAKE snake;
 FOOD food;
 unsigned int score=0;
-unsigned int max=0;
-char now_Dir = RIGHT;
+unsigned int max=0;		//最高分
+char now_Dir = RIGHT;		//蛇的方向
 char direction = RIGHT;
 
+int mode = 0;		//模式控制。 0是普通模式，1是断尾模式
 
 
-int Menu()
+
+int Menu()		//菜单
 {
 	gotoxy(43, 10);
 	printf("贪吃蛇小游戏");
@@ -26,6 +28,8 @@ int Menu()
 	gotoxy(43, 20);
 	printf("5. 最高分");
 	gotoxy(43, 22);
+	printf(" 6.模式");
+	gotoxy(43, 24);
 	printf("按任意键退出游戏");
 	Hide();
 	char ch;
@@ -38,19 +42,20 @@ int Menu()
 	case '3':result = 3; break;
 	case '4':result = 4; break;
 	case '5':result = 5; break;
+	case '6':result = 6; break;
 	}
 	system("cls");
 	return result;
 }
 
-void Hide()
+void Hide()		//隐藏光标
 {
 	HANDLE	hout = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO cor_info = { 1,0 };
 	SetConsoleCursorInfo(hout, &cor_info);
 }
 
-void About()
+void About()		//关于
 {
 	gotoxy(43, 12);
 	printf("懂得都懂");
@@ -63,7 +68,7 @@ void About()
 	system("cls");
 
 }
-void Help()
+void Help()		//帮助
 {
 	
 	gotoxy(40, 12);
@@ -83,7 +88,7 @@ void Help()
 
 }
 
-void Top()
+void Top()		//最高分
 {
 	unsigned int topscore;	//从top.txt读取最高分
 
@@ -103,6 +108,60 @@ void Top()
 	system("cls");
 }
 
+void Mode()
+{
+	//static int mode = 0;
+	char temp = '0';
+	
+	switch (mode)
+	{
+	case 0:
+		gotoxy(25, 6);
+		printf("当前模式：普通");
+		break;
+	case 1:
+		gotoxy(25, 6);
+		printf("当前模式：断尾");
+	}
+	gotoxy(25, 14);
+	printf("按任意键返回上级菜单");
+	
+	while (1)
+	{
+		gotoxy(25, 8);
+		printf("输入0进入普通模式，输入1进入断尾模式,q退出: ");
+
+		temp = getchar();
+		while (getchar() != '\n');
+		if (temp == 'q')
+			break;
+		else if (temp >= '0' || temp <= '1') {
+			mode = temp - '0';
+		}
+		switch (mode)
+		{
+		case 0:
+			gotoxy(25, 6);
+			printf("当前模式：普通");
+			break;
+		case 1:
+			gotoxy(25, 6);
+			printf("当前模式：断尾");
+			break;
+		}
+		gotoxy(25, 8);
+		printf("输入0进入普通模式，输入1进入断尾模式,q退出: ");
+		printf(" ");
+		gotoxy(25, 8);
+		printf("输入0进入普通模式，输入1进入断尾模式,q退出: ");
+		
+	}
+
+	Hide();
+	//char ch = _getch();
+	system("cls");
+}
+
 void initSnake(void)	//初始化蛇，确定蛇的初始大小和位置
 {
 	snake.length = 2;
@@ -115,7 +174,7 @@ void initSnake(void)	//初始化蛇，确定蛇的初始大小和位置
 	snake.body[1].y = (HEIGHT / 2) ;
 }
 
-void printFood(void)		//初始化食物
+void printFood(void)		//打印食物
 {
 	int flag = 1;
 	while (flag)
@@ -129,7 +188,7 @@ void printFood(void)		//初始化食物
 			if (food.x == snake.body[k].x && food.y == snake.body[k].y)
 			{
 				flag = 1;
-				break;		//位置重叠，重新生成food
+				break;		//若食物位置与蛇位置重叠，重新生成food
 			}
 		}
 
@@ -141,7 +200,7 @@ void printFood(void)		//初始化食物
 	return;
 }
 
-void gotoxy(int x, int y)	//光标定位函数，将光标定位到（x，y坐标位置）
+void gotoxy(int x, int y)	//光标定位函数，将光标定位到（x，y）坐标位置
 {
 	COORD coord;
 	coord.X = x;
@@ -152,7 +211,7 @@ void gotoxy(int x, int y)	//光标定位函数，将光标定位到（x，y坐标位置）
 	SetConsoleCursorPosition(hout, coord);
 }
 
-void initMap()	//画出蛇,食物和墙
+void initMap()	//初始化蛇,食物和墙
 {
 	initSnake();	//初始化蛇
 	printFood();
@@ -180,7 +239,7 @@ void initMap()	//画出蛇,食物和墙
 		printf("|");
 	}
 
-	for (int i = 0; i < WIDTH; i++)	//i is i early
+	for (int i = 0; i < WIDTH; i++)
 	{
 		gotoxy(i, 0);
 		printf("-");
@@ -207,7 +266,7 @@ int MoveSnake()		//移动蛇 , 返回1继续 ，返回0结束
 
 	if (_kbhit())
 	{
-		int direction = _getch();		//原版没有int
+		int direction = _getch();		//获取按下的方向键
 		switch (direction)
 		{
 		case UP:
@@ -259,8 +318,8 @@ int MoveSnake()		//移动蛇 , 返回1继续 ，返回0结束
 	{
 		//更新食物
 		printFood();
-		gotoxy(WIDTH+2, HEIGHT+2);		//改发的哥哥哥哥哥哥哥哥哥哥哥哥哥哥哥哥哥
-		printf("当前得分：%d", snake.length - 2);
+		gotoxy(WIDTH+2, HEIGHT+2);	
+		printf("当前得分：%d", snake.length - 2);		//打印当前得分
 	}
 
 
@@ -308,8 +367,23 @@ int IsCorrect()
 	//判断是否自撞
 	for (int i = 1; i < snake.length; i++)
 	{
-		if (snake.body[0].x == snake.body[i].x && snake.body[0].y == snake.body[i].y)
-			return 0;
+		if (snake.body[0].x == snake.body[i].x && snake.body[0].y == snake.body[i].y)		//若普通模式，则游戏结束，若断尾模式，则断尾。
+		{
+			if (mode == 0)	//若为普通模式
+			{
+				return 0;
+			}
+			else			//若为断尾模式
+			{
+				for (int j = i; j < snake.length; j++)
+				{
+					gotoxy(snake.body[j].x, snake.body[j].y);		//用空格覆盖蛇被截断的部分
+					printf(" ");
+				}
+				snake.length = i+1;
+				return 1;
+			}
+		}
 	}
 
 	return 1;

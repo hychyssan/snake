@@ -276,7 +276,7 @@ int MoveSnake2()		//移动蛇 , 返回1继续 ，返回0结束
 		printf("玩家1最终得分：%d", snake1.length - 2);
 		gotoxy(45, 16);
 		printf("玩家2最终得分： %d", snake2.length - 2);
-		gotoxy(45, 18);S
+		gotoxy(45, 18);
 		printf("按任意键返回主菜单");
 		char temp = _getch();
 		while (temp == UP || temp == DOWN || temp == LEFT || temp == RIGHT || temp == UP2 || temp == DOWN2 || temp == LEFT2 || temp == RIGHT2)

@@ -9,11 +9,11 @@
 #define WIDTH 60
 #define HEIGHT 20
 #define MAX 120
-#define UP 'w'		//snake1 move
+#define UP 'w'		//snake1's move
 #define DOWN 's'
 #define LEFT 'a'
 #define RIGHT 'd'
-#define UP2 72		//snake2 move
+#define UP2 72		//snake2's move
 #define DOWN2 80
 #define LEFT2 75
 #define RIGHT2 77
@@ -26,7 +26,7 @@ struct BODY
 
 struct SNAKE
 {
-	struct BODY body[20 * 60];		//snake body ,body[0]=snake head
+	struct BODY body[20 * 60];		//snake body ,body[0]=snake's head
 	int speed;
 	int length;
 };
@@ -38,12 +38,13 @@ struct FOOD
 };
 
 
-//function declaretion
+//function declaration
 int Menu();
 void Hide();
 void About();
 void Help();
 void Top();
+void Mode();
 void initSnake(void);
 void initSnake2(void);
 void printFood(void);
