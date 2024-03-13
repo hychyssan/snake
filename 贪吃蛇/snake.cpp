@@ -16,14 +16,16 @@ int Menu()
 	gotoxy(43, 10);
 	printf("贪吃蛇小游戏");
 	gotoxy(43, 12);
-	printf("1. 开始游戏");
+	printf("1. 单人模式");
 	gotoxy(43, 14);
-	printf("2. 帮助");
+	printf("2.双人模式");
 	gotoxy(43, 16);
-	printf("3. 关于");
+	printf("3. 帮助");
 	gotoxy(43, 18);
-	printf("4. 最高分");
+	printf("4. 关于");
 	gotoxy(43, 20);
+	printf("5. 最高分");
+	gotoxy(43, 22);
 	printf("按任意键退出游戏");
 	Hide();
 	char ch;
@@ -35,6 +37,7 @@ int Menu()
 	case '2':result = 2; break;
 	case '3':result = 3; break;
 	case '4':result = 4; break;
+	case '5':result = 5; break;
 	}
 	system("cls");
 	return result;
@@ -108,7 +111,7 @@ void initSnake(void)	//初始化蛇，确定蛇的初始大小和位置
 	snake.body[0].x = (WIDTH / 4) ;
 	snake.body[0].y = (HEIGHT / 2) ;
 
-	snake.body[1].x = (WIDTH / 2) - 1;
+	snake.body[1].x = (WIDTH / 4) - 1;
 	snake.body[1].y = (HEIGHT / 2) ;
 }
 

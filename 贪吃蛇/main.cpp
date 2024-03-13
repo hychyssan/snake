@@ -15,13 +15,17 @@ int main()
 			initMap();
 			while (MoveSnake());
 			break;
-		case 2:
-			Help();
+		case 2: //ดýะด
+			initMap2();
+			while (MoveSnake2());
 			break;
 		case 3:
-			About();
+			Help();
 			break;
 		case 4:
+			About();
+			break;
+		case 5:
 			Top();
 			break;
 		case 0:
