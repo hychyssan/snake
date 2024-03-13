@@ -258,7 +258,7 @@ int MoveSnake2()		//移动蛇 , 返回1继续 ，返回0结束
 	if(flag1||flag2)		//when snake1 or snake2 eating
 	{
 		//更新食物
-		printFood();
+		printFood2();
 		gotoxy(WIDTH + 2, HEIGHT + 2);		
 		printf("玩家1当前得分：%d", snake1.length - 2);
 		gotoxy(WIDTH + 2, HEIGHT + 4);

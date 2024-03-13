@@ -3,13 +3,14 @@
 #include"snake.h"
 
 SNAKE snake;
-FOOD food;
+FOOD food,barrier;		//食物和障碍都会随机生成
 unsigned int score=0;
 unsigned int max=0;		//最高分
 char now_Dir = RIGHT;		//蛇的方向
 char direction = RIGHT;
 
 int mode = 0;		//模式控制。 0是普通模式，1是断尾模式
+int bigfood = 0;
 
 
 
@@ -174,10 +175,16 @@ void initSnake(void)	//初始化蛇，确定蛇的初始大小和位置
 	snake.body[1].y = (HEIGHT / 2) ;
 }
 
-void printFood(void)		//打印食物
+void printFood(void)		//打印食物和障碍
 {
+	bigfood = 0;
+	if (snake.length % 4 == 0)		//若蛇长是4的倍数，则打印bigfood;
+	{
+		bigfood = 1;
+	}
+
 	int flag = 1;
-	while (flag)
+	while (flag)		//打印食物
 	{
 		flag = 0;
 		food.x = rand() % (WIDTH-2) + 1;	//0~WIDTH
@@ -185,15 +192,37 @@ void printFood(void)		//打印食物
 
 		for (int k = 0; k <= snake.length - 1; k++)
 		{
-			if (food.x == snake.body[k].x && food.y == snake.body[k].y)
+			if (food.x == snake.body[k].x && food.y == snake.body[k].y)		//若食物位置与蛇位置重叠，重新生成food
 			{
 				flag = 1;
-				break;		//若食物位置与蛇位置重叠，重新生成food
+				break;		
 			}
 		}
-
 		gotoxy(food.x, food.y);
-		printf("$");
+
+		//打印food或bigfood
+		if (bigfood == 1)
+			printf("￥");		//print bigfood
+		else
+			printf("$");		//print common food
+	}
+
+	flag = 1;
+	while (flag)		//打印障碍
+	{
+		flag = 0;
+		barrier.x = rand() % (WIDTH - 2) + 1;	//0~WIDTH
+		barrier.y = rand() % (HEIGHT - 2) + 1;	//0~HEIGHT
+		for (int k = 0; k <= snake.length - 1; k++)
+		{
+			if (barrier.x == snake.body[k].x && barrier.y == snake.body[k].y || barrier.x == food.x && barrier.y == food.y)		//若位置与蛇位置或食物重叠，重新生成barrier
+			{
+				flag = 1;
+				break;		
+			}
+		}
+		gotoxy(barrier.x, barrier.y);
+		printf("X");
 	}
 
 
@@ -307,6 +336,11 @@ int MoveSnake()		//移动蛇 , 返回1继续 ，返回0结束
 		snake.length++;
 		flag = 1;		//flag1 表示吃到食物
 		snake.body[snake.length - 1] = temp;	//蛇尾加1节
+		score+=5;		//分数+5
+		if (bigfood == 1)		//若吃的是bigfood,则再加一个1~50的随机数
+		{
+			score+= rand() % (50) + 1;
+		}
 	}
 
 	if (!flag)		//若没吃掉食物，则在原来的蛇尾显示一个空格
@@ -316,10 +350,14 @@ int MoveSnake()		//移动蛇 , 返回1继续 ，返回0结束
 	}
 	else
 	{
-		//更新食物
+		//清除上一个障碍物
+		gotoxy(barrier.x, barrier.y);
+		printf(" ");
+
+		//更新食物与障碍物
 		printFood();
 		gotoxy(WIDTH+2, HEIGHT+2);	
-		printf("当前得分：%d", snake.length - 2);		//打印当前得分
+		printf("当前得分：%d", score);		//打印当前得分
 	}
 
 
@@ -328,7 +366,7 @@ int MoveSnake()		//移动蛇 , 返回1继续 ，返回0结束
 	{
 		system("cls");		//清屏
 		gotoxy(45, 14);
-		printf("最终得分：%d", snake.length - 2);
+		printf("最终得分：%d", score);
 		gotoxy(45, 16);
 		printf("孩子你输了");
 		gotoxy(45, 18);
@@ -337,7 +375,6 @@ int MoveSnake()		//移动蛇 , 返回1继续 ，返回0结束
 		system("cls");
 
 		//计算最高分
-		 int score = snake.length - 2;
 		FILE* pt = fopen("top.txt", "r");	//打开文件读取之前最高分
 		fscanf(pt, "%u", &max);
 		fclose(pt);
@@ -362,6 +399,9 @@ int MoveSnake()		//移动蛇 , 返回1继续 ，返回0结束
 int IsCorrect()
 {
 	if (snake.body[0].x == 0 || snake.body[0].y == 0 ||snake.body[0].x == WIDTH - 1 || snake.body[0].y == HEIGHT-1 )	//判定蛇头是否撞墙
+		return 0;
+
+	if (snake.body[0].x == barrier.x && snake.body[0].y == barrier.y)		//判定蛇头是否撞上障碍物
 		return 0;
 
 	//判断是否自撞
